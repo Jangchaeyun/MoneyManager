@@ -2,6 +2,9 @@ package com.cherry.manager.service;
 
 import java.util.UUID;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -61,5 +64,36 @@ public class ProfileService {
 					return true;
 				})
 				.orElse(false);
+	}
+	
+	public boolean isAccountActive(String email) {
+		return profileRepository.findByEmail(email)
+				.map(ProfileEntity::getIsActive)
+				.orElse(false);
+	}
+	
+	public ProfileEntity getCurrentProfile() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		return profileRepository.findByEmail(authentication.getName())
+				.orElseThrow(() -> new UsernameNotFoundException("Profile not found with email: " + authentication.getName()));
+	}
+	
+	public ProfileDTO getPublicProfile(String email) {
+		ProfileEntity currentUser = null;
+		if (email == null) {
+			getCurrentProfile();
+		} else {
+			profileRepository.findByEmail(email)
+				.orElseThrow(() -> new UsernameNotFoundException("Profile not found with emai: " + email));
+		}
+		
+		return ProfileDTO.builder()
+				.id(currentUser.getId())
+				.fullName(currentUser.getFullName())
+				.email(currentUser.getEmail())
+				.profileImageUrl(currentUser.getProfileImageUrl())
+				.createdAt(currentUser.getCreatedAt())
+				.updatedAt(currentUser.getUpdatedAt())
+				.build();
 	}
 }
