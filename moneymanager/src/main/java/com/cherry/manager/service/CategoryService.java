@@ -1,8 +1,12 @@
 package com.cherry.manager.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.cherry.manager.dto.CategoryDTO;
 import com.cherry.manager.entity.CategoryEntity;
@@ -17,6 +21,23 @@ public class CategoryService {
 	private final ProfileService profileService;
 	private final CategoryRepostiory categoryRepostiory;
 	
+	public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
+		ProfileEntity profile = profileService.getCurrentProfile();
+		if (categoryRepostiory.existsByNameAndProfileId(categoryDTO.getName(), profile.getId())) {
+			throw new RuntimeException( "Category with this name already exists");
+		}
+		
+		CategoryEntity newCategory = toEntity(categoryDTO, profile);
+		newCategory = categoryRepostiory.save(newCategory);
+		return toDTO(newCategory);
+	}
+	
+	public List<CategoryDTO> getCategoriesForCurrentUser() {
+		ProfileEntity profile = profileService.getCurrentProfile();
+		List<CategoryEntity> categories = categoryRepostiory.findByProfileId(profile.getId());
+		return categories.stream().map(this::toDTO).toList();
+	}
+	
 	private CategoryEntity toEntity(CategoryDTO categoryDTO, ProfileEntity profile) {
 		return CategoryEntity.builder()
 				.name(categoryDTO.getName())
@@ -30,6 +51,13 @@ public class CategoryService {
 		return CategoryDTO.builder()
 				.id(entity.getId())
 				.profileId(entity.getProfile() != null ? entity.getProfile().getId() : null)
+				.name(entity.getName())
+				.icon(entity.getIcon())
+				.createdAt(entity.getCreatedAt())
+				.updatedAt(entity.getUpdatedAt())
+				.type(entity.getType())
+				.build();
+				
 				
 	}
 }

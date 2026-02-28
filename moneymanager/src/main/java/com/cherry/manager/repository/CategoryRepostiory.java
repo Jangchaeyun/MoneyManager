@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.cherry.manager.entity.CategoryEntity;
 
 public interface CategoryRepostiory extends JpaRepository<CategoryEntity, Long> {
-	List<CategoryEntity> findByProfileId(String profileId);
+	List<CategoryEntity> findByProfileId(Long profileId);
 	
 	Optional<CategoryEntity> findByIdAndProfileId(Long id, Long profileId);
 	
