@@ -38,6 +38,24 @@ public class CategoryService {
 		return categories.stream().map(this::toDTO).toList();
 	}
 	
+	
+	public List<CategoryDTO> getCategoriesByTypeForCurrentUser(String type) {
+		ProfileEntity profile = profileService.getCurrentProfile();
+		List<CategoryEntity> entities = categoryRepostiory.findByTypeAndProfileId(type, profile.getId());
+		return entities.stream().map(this::toDTO).toList();
+	}
+	
+	public CategoryDTO updateCategory(Long categoryId, CategoryDTO dto) {
+		ProfileEntity profile = profileService.getCurrentProfile();
+		CategoryEntity existingCategory = categoryRepostiory.findByIdAndProfileId(categoryId, profile.getId())
+			.orElseThrow(() -> new RuntimeException("Category not found or nor accessible"));
+		
+		existingCategory.setName(dto.getName());
+		existingCategory.setIcon(dto.getIcon());
+		existingCategory = categoryRepostiory.save(existingCategory);
+		return toDTO(existingCategory);
+	}
+	
 	private CategoryEntity toEntity(CategoryDTO categoryDTO, ProfileEntity profile) {
 		return CategoryEntity.builder()
 				.name(categoryDTO.getName())
@@ -57,7 +75,5 @@ public class CategoryService {
 				.updatedAt(entity.getUpdatedAt())
 				.type(entity.getType())
 				.build();
-				
-				
 	}
 }
