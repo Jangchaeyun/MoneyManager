@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +17,7 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long>{
 	
 	List<ExpenseEntity> findTop5ByProfileIdOrderByDateDesc(Long profileId);
 	
-	@Query("SELECT SUM(e.amount) ExpenseEntity e WHERE i.profile.id = :profileId")
+	@Query("SELECT SUM(e.amount) FROM ExpenseEntity e WHERE e.profile.id = :profileId")
 	BigDecimal findTotalExpenseByProfileId(@Param("profileId") Long profileId); 
 	
 	List<ExpenseEntity> findByProfileIdAndDateBetweenAndNameContainingIgnoreCase(Long profileId, LocalDate startDate, LocalDate endDate, String keyword, Sort sort);

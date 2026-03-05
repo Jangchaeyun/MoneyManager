@@ -37,7 +37,7 @@ public class IncomeEntity {
 	private String name;
 	private String icon;
 	private LocalDate date;
-	private BigDecimal amout;
+	private BigDecimal amount;
 	
 	@Column(updatable = false)
 	@CreationTimestamp
