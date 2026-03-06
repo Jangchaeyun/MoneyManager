@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ExpensesDTO {
+public class ExpenseDTO {
 	
 	private Long id;
 	private String name;

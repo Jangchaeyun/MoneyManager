@@ -1,12 +1,15 @@
 package com.cherry.manager.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.cherry.manager.dto.ExpenseDTO;
 import com.cherry.manager.dto.IncomeDTO;
 import com.cherry.manager.entity.CategoryEntity;
+import com.cherry.manager.entity.ExpenseEntity;
 import com.cherry.manager.entity.IncomeEntity;
 import com.cherry.manager.entity.ProfileEntity;
 import com.cherry.manager.repository.CategoryRepostiory;
@@ -39,6 +42,31 @@ public class IncomeService {
 		List<IncomeEntity> list = incomeRepository.findByProfileIdAndDateBetween(profile.getId(), startDate, endDate);
 		return list.stream().map(this::toDTO).toList();
 	}
+	
+	public void deleteIncome(Long incomeId) {
+		ProfileEntity profile = profileService.getCurrentProfile();
+		IncomeEntity entity = incomeRepository.findById(incomeId)
+			.orElseThrow(() -> new RuntimeException("Income not found"));
+		
+		if (!entity.getProfile().getId().equals(profile.getId())) {
+			throw new RuntimeException("Unauthorized to delete this income");
+		}
+		
+		incomeRepository.delete(entity);
+	}
+	
+	public List<IncomeDTO> getLatest5ExpensesForCurrentUser() {
+		ProfileEntity profile =  profileService.getCurrentProfile();
+		List<IncomeEntity> list = incomeRepository.findTop5ByProfileIdOrderByDateDesc(profile.getId());
+		return list.stream().map(this::toDTO).toList();
+	}
+	
+	public BigDecimal getTotalExpenseForCurrentUser() {
+		ProfileEntity profile = profileService.getCurrentProfile();
+		BigDecimal total = incomeRepository.findTotalIcomeByProfileId(profile.getId());
+		return total != null ? total : BigDecimal.ZERO;
+	}
+	
 	
 	private IncomeEntity toEntity(IncomeDTO dto, ProfileEntity profile, CategoryEntity category) {
 		return IncomeEntity.builder()
