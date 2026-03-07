@@ -55,13 +55,13 @@ public class IncomeService {
 		incomeRepository.delete(entity);
 	}
 	
-	public List<IncomeDTO> getLatest5ExpensesForCurrentUser() {
+	public List<IncomeDTO> getLatest5EIncomesForCurrentUser() {
 		ProfileEntity profile =  profileService.getCurrentProfile();
 		List<IncomeEntity> list = incomeRepository.findTop5ByProfileIdOrderByDateDesc(profile.getId());
 		return list.stream().map(this::toDTO).toList();
 	}
 	
-	public BigDecimal getTotalExpenseForCurrentUser() {
+	public BigDecimal getTotalIncomeForCurrentUser() {
 		ProfileEntity profile = profileService.getCurrentProfile();
 		BigDecimal total = incomeRepository.findTotalIcomeByProfileId(profile.getId());
 		return total != null ? total : BigDecimal.ZERO;
