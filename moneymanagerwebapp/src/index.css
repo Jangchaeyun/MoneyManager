@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "YPairing";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2601-4@1.1/YPairingFont.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+body {
+  font-family: "YPairing", sans-serif;
+  background-color: #fcfbfc;
+  overflow-x: hidden;
+}
