@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosConfing = axios.create({
-  baseURL: "https://localhost:8080/api/v1.0",
+  baseURL: "http://localhost:8080/api/v1.0",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",

@@ -1,24 +1,26 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import Input from "../components/input";
 import { validateEmail } from "../util/validation";
+import axiosConfing from "../util/axiosConfig";
+import { API_ENDPOINTS } from "../util/apiEndPoints";
+import { AppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
+import { LoaderCircle } from "lucide-react";
 
 const Login = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { setUser } = useContext(AppContext);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!fullName.trim()) {
-      setError("이름을 입력해 주세요.");
-      return;
-    }
 
     if (!password.trim()) {
       setError("비밀번호를 입력해 주세요.");
@@ -30,7 +32,29 @@ const Login = () => {
       return;
     }
 
-    console.log(fullName, email, password);
+    setError("");
+
+    try {
+      const response = await axiosConfing.post(API_ENDPOINTS.LOGIN, {
+        email,
+        password,
+      });
+      const { token, user } = response.data;
+      if (token) {
+        localStorage.setItem("token", token);
+        setUser(user);
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        setError(error.response.data.message);
+      } else {
+        console.error("Something went wrong", error);
+        setError(error.message);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -48,7 +72,7 @@ const Login = () => {
           <p className="text-sm text-slate-700 text-center mb-8">
             로그인하려면 정보를 입력하세요.
           </p>
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -73,10 +97,18 @@ const Login = () => {
             )}
 
             <button
-              className="btn-primary w-full py-3 text-lg font-medium"
+              disabled={isLoading}
+              className={`btn-primary w-full py-3 text-lg font-medium flex items-center justify-center gap-2 ${isLoading ? "opacity-60 cursor-not-allowed" : ""}`}
               type="submit"
             >
-              로그인
+              {isLoading ? (
+                <>
+                  <LoaderCircle className="animate-spin w-5 h-5" />
+                  로그인 중...
+                </>
+              ) : (
+                <>로그인</>
+              )}
             </button>
 
             <p className="text-sm text-slate-800 text-center mt-6">
