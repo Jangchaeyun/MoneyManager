@@ -7,18 +7,22 @@ import axiosConfing from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndPoints";
 import toast from "react-hot-toast";
 import { LoaderCircle } from "lucide-react";
+import ProfilePhotoSelector from "../components/ProfilePhotoSelector";
+import uploadProfileImage from "../util/uploadProfileImages";
 
 const Signup = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [profilePhoto, setProfilePhoto] = useState(null);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let profileImageUrl = "";
     setIsLoading(true);
 
     if (!fullName.trim()) {
@@ -42,10 +46,16 @@ const Signup = () => {
     setError("");
 
     try {
+      if (profilePhoto) {
+        const imageUrl = await uploadProfileImage(profilePhoto);
+        profileImageUrl = imageUrl || "";
+      }
+
       const response = await axiosConfing.post(API_ENDPOINTS.REGISTER, {
         fullName,
         email,
         password,
+        profileImageUrl,
       });
       if (response.status === 201) {
         toast.success("회원가입이 성공적으로 완료되었습니다.");
@@ -75,7 +85,12 @@ const Signup = () => {
             저희와 함께 지출 내역을 추적해 보세요.
           </p>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex justify-center mb-6"></div>
+            <div className="flex justify-center mb-6">
+              <ProfilePhotoSelector
+                image={profilePhoto}
+                setImage={setProfilePhoto}
+              />
+            </div>
             <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
               <Input
                 value={fullName}
