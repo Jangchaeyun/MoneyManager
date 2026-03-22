@@ -3,11 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import Input from "../components/input";
 import { validateEmail } from "../util/validation";
-import axiosConfing from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndPoints";
 import { AppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
 import { LoaderCircle } from "lucide-react";
+import axiosConfig from "../util/axiosConfig";
 
 const Login = () => {
   const [fullName, setFullName] = useState("");
@@ -35,7 +35,7 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await axiosConfing.post(API_ENDPOINTS.LOGIN, {
+      const response = await axiosConfig.post(API_ENDPOINTS.LOGIN, {
         email,
         password,
       });

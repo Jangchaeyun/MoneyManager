@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const axiosConfing = axios.create({
+const axiosConfig = axios.create({
   baseURL: "http://localhost:8080/api/v1.0",
   headers: {
     "Content-Type": "application/json",
@@ -16,10 +16,11 @@ const excludeEndpoints = [
   "/health",
 ];
 
-axiosConfing.interceptors.request.use(
+//request interceptor
+axiosConfig.interceptors.request.use(
   (config) => {
     const shouldSkipToken = excludeEndpoints.some((endpoint) => {
-      config.url?.includes(endpoint);
+      return config.url?.includes(endpoint);
     });
 
     if (!shouldSkipToken) {
@@ -35,7 +36,8 @@ axiosConfing.interceptors.request.use(
   },
 );
 
-axiosConfing.interceptors.response.use(
+//response interceptor
+axiosConfig.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -53,4 +55,4 @@ axiosConfing.interceptors.response.use(
   },
 );
 
-export default axiosConfing;
+export default axiosConfig;

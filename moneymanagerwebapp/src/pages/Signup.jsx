@@ -3,12 +3,12 @@ import { assets } from "../assets/assets";
 import { useState } from "react";
 import Input from "../components/input";
 import { validateEmail } from "../util/validation";
-import axiosConfing from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndPoints";
 import toast from "react-hot-toast";
 import { LoaderCircle } from "lucide-react";
 import ProfilePhotoSelector from "../components/ProfilePhotoSelector";
 import uploadProfileImage from "../util/uploadProfileImages";
+import axiosConfig from "../util/axiosConfig";
 
 const Signup = () => {
   const [fullName, setFullName] = useState("");
@@ -51,7 +51,7 @@ const Signup = () => {
         profileImageUrl = imageUrl || "";
       }
 
-      const response = await axiosConfing.post(API_ENDPOINTS.REGISTER, {
+      const response = await axiosConfig.post(API_ENDPOINTS.REGISTER, {
         fullName,
         email,
         password,

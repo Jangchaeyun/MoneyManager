@@ -8,12 +8,12 @@ const uploadProfileImage = async (image) => {
   formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
   try {
-    const response = fetch(API_ENDPOINTS.UPLOAD_IMAGE, {
+    const response = await fetch(API_ENDPOINTS.UPLOAD_IMAGE, {
       method: "POST",
       body: formData,
     });
     if (!response.ok) {
-      const errorData = await response.json;
+      const errorData = await response.json();
       throw new Error(
         `Cloudinary upload failes: ${errorData.error.message || (await response).statusText}`,
       );
