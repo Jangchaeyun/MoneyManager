@@ -5,6 +5,7 @@ import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndPoints";
 import toast from "react-hot-toast";
 import IncomeList from "../components/IncomeList";
+import Modal from "../components/Modal";
 
 const Income = () => {
   useUser();
@@ -49,7 +50,18 @@ const Income = () => {
       <div className="my-5 mx-auto">
         <div className="grid grid-cols-1 gap-6">
           <div></div>
-          <IncomeList transactions={incomeData} />
+          <IncomeList
+            transactions={incomeData}
+            onDelete={(id) => console.log("deleting the income", id)}
+          />
+
+          <Modal
+            isOpen={openAddIncomeModal}
+            onClose={() => setOpenAddIncomeModal(false)}
+            title="소득 추가"
+          >
+            
+          </Modal>
         </div>
       </div>
     </Dashboard>
