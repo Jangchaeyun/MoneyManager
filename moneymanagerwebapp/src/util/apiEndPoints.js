@@ -9,5 +9,6 @@ export const API_ENDPOINTS = {
   ADD_CATEGORY: "/categories",
   UPDATE_CATEOGRY: (categoryId) => `/categories/${categoryId}`,
   GET_ALL_INCOMES: "/incomes",
+  CATEGORY_BY_TYPE: (type) => `/categories/${type}`,
   UPLOAD_IMAGE: `https://pi.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
 };

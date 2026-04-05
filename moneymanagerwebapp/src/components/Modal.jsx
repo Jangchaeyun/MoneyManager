@@ -8,9 +8,7 @@ const Modal = ({ isOpen, onClose, children, title }) => {
       <div className="relative p-4 w-full max-w-2xl max-h-[90vh]">
         <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-100">
           <div className="flex items-center justify-between p-5 md:p-6 border-b border-gray-100 rounded-t-xl">
-            <h3 className="text-xl font-semibold text-gray-800">
-              카테고리 추가
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
 
             <button
               onClick={onClose}
