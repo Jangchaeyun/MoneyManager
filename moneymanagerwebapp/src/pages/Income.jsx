@@ -8,6 +8,7 @@ import IncomeList from "../components/IncomeList";
 import Modal from "../components/Modal";
 import { Plus } from "lucide-react";
 import AddIncomeForm from "../components/AddIncomeForm";
+import DeleteAlert from "../components/DeleteAlert";
 
 const Income = () => {
   useUser();
@@ -22,8 +23,6 @@ const Income = () => {
   });
 
   const fetchIncomeDetails = async () => {
-    if (loading) return;
-
     setLoading(true);
 
     try {
@@ -62,6 +61,7 @@ const Income = () => {
   };
 
   const handleAddIncome = async (income) => {
+    console.log("넘어온 데이터", income);
     const { name, amount, date, icon, categoryId } = income;
 
     if (!name.trim()) {
@@ -109,6 +109,23 @@ const Income = () => {
     }
   };
 
+  const deleteIncome = async (id) => {
+    setLoading(true);
+    try {
+      await axiosConfig.delete(API_ENDPOINTS.DELTE_INCOME(id));
+      setOpenDeleteAlert({ show: false, data: null });
+      toast.success("소득원이 성공적으로 삭제되었습니다.");
+      fetchIncomeDetails();
+    } catch (error) {
+      console.log("소득원 삭제에 실패했습니다.", error);
+      toast.error(
+        error.response?.data?.message || "소득원 삭제에 실패했습니다.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchIncomeDetails();
     fetchIncomeCategories();
@@ -128,7 +145,7 @@ const Income = () => {
           </div>
           <IncomeList
             transactions={incomeData}
-            onDelete={(id) => console.log("deleting the income", id)}
+            onDelete={(id) => setOpenDeleteAlert({ show: true, data: id })}
           />
 
           <Modal
@@ -139,6 +156,17 @@ const Income = () => {
             <AddIncomeForm
               onAddIncome={(income) => handleAddIncome(income)}
               categories={categories}
+            />
+          </Modal>
+
+          <Modal
+            isOpen={openDeleteAlert.show}
+            onClose={() => setOpenDeleteAlert({ show: false, data: null })}
+            title="소득원 삭제"
+          >
+            <DeleteAlert
+              content="정말로 이 소득원을 삭제하시겠습니까?"
+              onDelete={() => deleteIncome(openDeleteAlert.data)}
             />
           </Modal>
         </div>

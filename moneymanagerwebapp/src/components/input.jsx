@@ -25,6 +25,7 @@ const Input = ({
             value={value}
             onChange={(e) => onChange(e)}
           >
+            <option value=""></option>
             {options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
