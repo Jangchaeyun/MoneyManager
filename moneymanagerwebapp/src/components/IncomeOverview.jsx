@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { prepareIncomeLineChartData } from "../util/util";
 import CustomLineChart from "./CustomLineChart";
+import { Plus } from "lucide-react";
 
 const IncomeOverview = ({ transactions, onAddIncome }) => {
   const [chartData, setChartData] = useState([]);

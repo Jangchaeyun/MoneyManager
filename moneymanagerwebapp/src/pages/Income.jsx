@@ -127,12 +127,43 @@ const Income = () => {
     }
   };
 
-  const handleDownloadIncomeDetails = () => {
-    console.log("Download income details");
+  const handleDownloadIncomeDetails = async () => {
+    try {
+      const response = await axiosConfig.get(
+        API_ENDPOINTS.INCOME_EXCEL_DOWNLOAD,
+        { responseType: "blob" },
+      );
+      let filename = "income_details.xlsx";
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", filename);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      toast.success("소득 내역이 Excel 파일로 다운로드되었습니다.");
+    } catch (error) {
+      console.error("소득 내역 다운로드에 실패했습니다.", error);
+      toast.error(
+        error.response?.data?.message || "소득 내역 다운로드에 실패했습니다.",
+      );
+    }
   };
 
-  const handleEmailIncomeDetails = () => {
-    console.log("Email income details");
+  const handleEmailIncomeDetails = async () => {
+    try {
+      const response = await axiosConfig.get(API_ENDPOINTS.EMAIL_INCOME);
+      if (response.status === 200) {
+        toast.success("소득 내역이 이메일로 전송되었습니다.");
+      }
+    } catch (error) {
+      console.error("수입 내역 이메일 전송 중 오류가 발생했습니다:", error);
+      toast.error(
+        error.response?.data?.message ||
+          "소득 내역 이메일 전송에 실패했습니다.",
+      );
+    }
   };
 
   useEffect(() => {

@@ -1,20 +1,52 @@
-import { Download, Mail } from "lucide-react";
-import React from "react";
+import { Download, LoaderCircle, Mail } from "lucide-react";
+import React, { useState } from "react";
 import TransactionInfoCard from "./TransactionInfoCard";
 import moment from "moment";
 
 const IncomeList = ({ transactions, onDelete, onDownload, onEmail }) => {
+  const [loading, setLoading] = useState(false);
+  const handleEmail = async () => {
+    setLoading(true);
+    try {
+      await onEmail();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    setLoading(true);
+    try {
+      await onDownload();
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="card">
       <div className="flex items-center justify-between">
         <h5 className="text-lg">소득원</h5>
         <div className="flex items-center justify-end gap-2">
-          <button className="card-btn">
-            <Mail size={15} className="text-base" onClick={onEmail} />
-            이메일
+          <button disabled={loading} className="card-btn" onClick={handleEmail}>
+            {loading ? (
+              <>
+                <LoaderCircle className="w-4 h-4 animate-spin"/>
+                이메일 보내는 중...
+              </>
+            ) : (
+              <>
+                <Mail size={15} className="text-base" />
+                이메일 보내기
+              </>
+            )}
           </button>
-          <button className="card-btn">
-            <Download size={15} className="text-base" onClick={onDownload} />
+          <button
+            disabled={loading}
+            className="card-btn"
+            onClick={handleDownload}
+          >
+            <Download size={15} className="text-base" />
             다운로드
           </button>
         </div>
