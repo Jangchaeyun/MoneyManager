@@ -21,7 +21,7 @@ const Input = ({
       <div className="relative">
         {isSelect ? (
           <select
-            className="w-full bg-transparent outline-none border border-gray-300 rounded-md py-2 px-3 pr-10 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
+            className="w-full bg-transparent outline-none border border-gray-300 rounded-md py-2 px-3 text-gray-700 leading focus:outline-none focus:border-blue-500"
             value={value}
             onChange={(e) => onChange(e)}
           >
