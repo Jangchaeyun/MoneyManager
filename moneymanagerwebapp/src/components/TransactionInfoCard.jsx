@@ -15,7 +15,7 @@ const TransactionInfoCard = ({
   onDelete,
 }) => {
   const getAmountStyles = () =>
-    type === "소득" ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800";
+    type === "income" ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800";
 
   return (
     <div className="group relative flex items-center gap-4 mt-2 p-3 rounded-lg hover:bg-gray-100/50">
@@ -47,10 +47,10 @@ const TransactionInfoCard = ({
             className={`flex items-center gap-2 px-3 py-1.5 rounded-md ${getAmountStyles()}`}
           >
             <h6 className="text-xs font-medium">
-              {type === "소득" ? "+" : "-"}
+              {type === "income" ? "+" : "-"}
               {amount.toLocaleString()} 원
             </h6>
-            {type === "소득" ? (
+            {type === "income" ? (
               <TrendingUp size={15} />
             ) : (
               <TrendingDown size={15} />
