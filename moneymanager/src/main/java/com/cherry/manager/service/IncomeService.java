@@ -64,7 +64,7 @@ public class IncomeService {
 	
 	public BigDecimal getTotalIncomeForCurrentUser() {
 		ProfileEntity profile = profileService.getCurrentProfile();
-		BigDecimal total = incomeRepository.findTotalIcomeByProfileId(profile.getId());
+		BigDecimal total = incomeRepository.findTotalIncomeByProfileId(profile.getId());
 		return total != null ? total : BigDecimal.ZERO;
 	}
 	
