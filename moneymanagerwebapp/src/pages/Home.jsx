@@ -7,6 +7,9 @@ import { useEffect, useState } from "react";
 import axiosConfig from "../util/axiosConfig";
 import { API_ENDPOINTS } from "../util/apiEndPoints";
 import toast from "react-hot-toast";
+import RecentTransactions from "../components/RecentTransactions";
+import FinanceOverview from "../components/FinanceOverview";
+import Transactions from "../components/Transactions";
 
 const Home = () => {
   useUser();
@@ -66,7 +69,30 @@ const Home = () => {
               color="bg-red-600"
             />
           </div>
-          <div className="grid-cols-1 md:grid-cols-2 gap-6 mt-6"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <RecentTransactions
+              transactions={dashboardData?.recentTransactions}
+              onMore={() => navigate("/expense")}
+            />
+
+            <FinanceOverview
+              totalBalance={dashboardData?.totalBalance || 0}
+              totalIncome={dashboardData?.totalIncome || 0}
+              totalExpense={dashboardData?.totalExpense || 0}
+            />
+
+            <Transactions
+              transactions={dashboardData?.recentExpenses || []}
+              onMore={() => navigate("/expense")}
+              type="expense"
+            />
+
+            <Transactions
+              transactions={dashboardData?.recentIncomes || []}
+              onMore={() => navigate("/imcome")}
+              type="income"
+            />
+          </div>
         </div>
       </Dashboard>
     </div>
